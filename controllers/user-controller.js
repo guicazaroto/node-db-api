@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 export async function login(req, res) {
-    const usuario = await db.select('*').from('usuario').where({ login: req.body.login })
+  try{
+    const [usuario] = await db.select('*').from('usuario').where({ login: req.body.login })
     const tokenJWT = validateCredentials(usuario, req.body.senha)
     if (tokenJWT) {
       return res.status(200).json({
@@ -15,13 +16,14 @@ export async function login(req, res) {
       })
     }
     res.status(401).json({ message: 'Login ou senha incorretos' })
-
+  }catch(err){
+    res.status(500).json({ err })
+  }
  
 }
 
-function validateCredentials(usuarios, senha) {
-  if (!usuarios.length) return null
-  let usuario = usuarios[0]
+function validateCredentials(usuario, senha) {
+  if(!usuario) return null
   let checkSenha = bcrypt.compareSync(String(senha), usuario.senha)
   if (checkSenha) {
     const tokenJWT = jwt.sign({ id: usuario.id },
