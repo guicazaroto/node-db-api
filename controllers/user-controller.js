@@ -1,3 +1,5 @@
+import db from '../database.js'
+
 export function login (name, password) {
    // pega as credenciais
    // converte o password pra hash
@@ -12,4 +14,3 @@ export function singUp (name, password) {
   // salva as credenciais no banco de dados
   // status 201
 }
-
