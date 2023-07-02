@@ -1,0 +1,2 @@
+export POSTGRES_URL=
+export SECRET_KEY=
