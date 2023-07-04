@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import db from '../database.js';
 
-export default async function auth(req, res, next) {
+export async function auth(req, res, next) {
     let authToken = req.headers["authorization"];
     if (!authToken) {
         res.status(401).json({ message: 'Token de acesso requerido' });
@@ -11,16 +11,23 @@ export default async function auth(req, res, next) {
     try {
         let token = authToken.split(' ')[1];
         req.token = token; 
-        req.usuarioId = await jwt.verifyAsync(req.token, process.env.SECRET_KEY);
+
+        jwt.verify(req.token, process.env.SECRET_KEY, (err, decodeToken) => {
+            if (err) {
+                res.status(401).json({ message: 'Acesso negado'})
+                return
+            }
+            req.usuarioId = decodeToken.id
+            
+            next()
+        });
     } catch (err) {
         res.status(401).json({ message: 'Acesso negado', error: err });
         return
     }
-
-    next();
 }
 
-export default async function isAdmin(req, res, next) {
+export async function isAdmin(req, res, next) {
     let usuarioId = req.usuarioId;
     try {
         let usuario = await db.select().from('usuario').where({ id: usuarioId });
