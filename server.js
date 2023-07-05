@@ -4,6 +4,7 @@ import privateRoutes from './private-routes.js'
 import { config } from 'dotenv';
 import {auth, isAdmin} from './middlewares/auth.js';
 import cors from 'cors'
+import path from 'path'
 
 config()
 
