@@ -18,7 +18,7 @@ export async function auth(req, res, next) {
                 return
             }
             req.usuarioId = decodeToken.id
-            
+
             next()
         });
     } catch (err) {
@@ -28,17 +28,22 @@ export async function auth(req, res, next) {
 }
 
 export async function isAdmin(req, res, next) {
-    let usuarioId = req.usuarioId;
+    let usuarioId = req.usuarioId
+    
     try {
-        let usuario = await db.select().from('usuario').where({ id: usuarioId });
+        let [usuario] = await db.select().from('usuario').where({ id: usuarioId });
+
         if (usuario) {
             let roles = usuario.roles.split(';')
             let adminRole = roles.find(role => role === 'ADMIN')
             if (adminRole === 'ADMIN') {
                 next();
+                console.log('ADMIN')
                 return
             }
             else {
+                console.log('nao admin')
+
                 res.status(403).json({ message: 'Role de ADMIN requerida' });
                 return
             }
