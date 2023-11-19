@@ -1,5 +1,5 @@
 import express from 'express'
-import routes from './routes.js'
+import freeRoutes from './routes.js'
 import privateRoutes from './private-routes.js'
 import { config } from 'dotenv';
 import {auth, isAdmin} from './middlewares/auth.js';
@@ -13,8 +13,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.use('/v1', privateRoutes)
-app.use('/v2/seguranca', routes)
+app.use('/v2/seguranca', freeRoutes)
 app.use('/v2', auth, isAdmin, privateRoutes)
 
 

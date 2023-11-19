@@ -24,7 +24,9 @@ export async function login(req, res) {
 
 function validateCredentials(usuario, senha) {
   if(!usuario) return null
+
   let checkSenha = bcrypt.compareSync(String(senha), usuario.senha)
+
   if (checkSenha) {
     const tokenJWT = jwt.sign({ id: usuario.id },
       process.env.SECRET_KEY, {
@@ -32,5 +34,6 @@ function validateCredentials(usuario, senha) {
     })
     return tokenJWT
   }
+  
   return null
 }

@@ -38,12 +38,9 @@ export async function isAdmin(req, res, next) {
             let adminRole = roles.find(role => role === 'ADMIN')
             if (adminRole === 'ADMIN') {
                 next();
-                console.log('ADMIN')
                 return
             }
             else {
-                console.log('nao admin')
-
                 res.status(403).json({ message: 'Role de ADMIN requerida' });
                 return
             }
